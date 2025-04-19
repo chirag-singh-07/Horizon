@@ -13,6 +13,8 @@ import { Button } from "./ui/button";
 import { Form } from "./ui/form";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signIn, signUp } from "@/lib/actions/user.action";
+// import { log } from "console";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -28,6 +30,14 @@ const AuthForm = ({ type }: { type: string }) => {
     defaultValues: {
       email: "",
       password: "",
+      firstName: "",
+      lastName: "",
+      address1: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      dateOfBirth: "",
+      ssn: "",
     },
   });
 
@@ -36,17 +46,19 @@ const AuthForm = ({ type }: { type: string }) => {
     setLoading(true);
     try {
       if (type === "sign-up") {
-        // const userData = {
-        //     firstName : values.firstName,
-        // }
+        const newUser = await signUp(values);
+        if (newUser) {
+          setUser(newUser);
+          console.log("user", user);
+        }
       }
 
       if (type === "sign-in") {
         // const response = await signIn({
         //   email: values.email,
         //   password: values.password,
-        // })
-        // if(response) router.push('/');
+        // });
+        // if (response) router.push("/");
       }
     } catch (error) {
       console.log(error);
@@ -68,9 +80,9 @@ const AuthForm = ({ type }: { type: string }) => {
           <h1 className="text-24 lg:text-36 font-semibold text-gray-900 ">
             {user
               ? "Link Account "
-              : type === "sign-up"
-              ? "Sign Up"
-              : "Sign In"}
+              : type === "sign-in"
+              ? "Sign In"
+              : "Sign Up"}
             <p className="text-16 font-normal text-gray-600">
               {user
                 ? "Link your account to get started"
@@ -106,7 +118,7 @@ const AuthForm = ({ type }: { type: string }) => {
                   <CustomInput
                     control={form.control}
                     label={"Address"}
-                    name={"address"}
+                    name={"address1"}
                     placeholder={"Enter your specific address"}
                   />
                   <CustomInput
@@ -136,7 +148,7 @@ const AuthForm = ({ type }: { type: string }) => {
                     <CustomInput
                       control={form.control}
                       label={"Date of Brith"}
-                      name={"dob"}
+                      name={"dateOfBirth"}
                       placeholder={"YYYY-MM-DD"}
                     />
 
